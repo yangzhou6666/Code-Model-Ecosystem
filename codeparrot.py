@@ -5,6 +5,8 @@ import os
 from tqdm import tqdm
 import logging
 import hashlib
+import yaml
+
 
 logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -21,7 +23,10 @@ def download_and_save_data(data_name, cache_dir=None, data_dir=None, split='trai
 
 
 if __name__ == '__main__':
-    cache_dir = "./.data_cache" # Set your own cache directory here
+    with open("config.yaml", "r") as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+    cache_dir = config['cache_dir']
 
     download_and_save_data(
         data_name="codeparrot/codeparrot-clean",
