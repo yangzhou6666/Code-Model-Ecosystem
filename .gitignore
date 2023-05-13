@@ -1,3 +1,4 @@
 .data_cache/
 config.yaml
 .DS_Store
+data/
