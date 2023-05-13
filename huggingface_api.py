@@ -80,5 +80,16 @@ if __name__ == '__main__':
     api_key = config['huggingface_key']
 
     hf_api = HuggingFaceAPI(api_key)
-    with open(f'{save_dir}/model_list.json') as f:
-        model_list = json.load(f)
+
+    # transform data list to json
+    with open(f'{save_dir}/dataset_list.json', 'r') as f:
+        dataset_list = json.load(f)
+    
+    dataset_dict = {}
+    for dataset in dataset_list:
+        datasetId = dataset['id']
+        dataset_dict[datasetId] = dataset
+
+    with open(f'{save_dir}/dataset_dict.json', 'w') as f:
+        json.dump(dataset_dict, f, indent=4)
+        
