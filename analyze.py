@@ -58,7 +58,7 @@ def model_data_dependency(model_dict):
                 license = tag.split(':')[1]
 
         if contain_license is False:
-            pass
+            dependency_dict[model_name] = ''
         else:
             num_model_with_data_info += 1
             if license in data_dict:
