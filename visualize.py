@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    data_path = 'data/manual-labeling.csv'
+    data_path = 'data/model_dependency_clean.csv'
 
     model_set = set()
     dataset_set = set()
