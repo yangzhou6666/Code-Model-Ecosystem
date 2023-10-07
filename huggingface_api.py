@@ -28,6 +28,7 @@ class HuggingFaceAPI:
         headers = {"authorization": "Bearer {}".format(self.api_key)}
 
         response = requests.get(self.base_url + endpoint, headers=headers)
+        
         response_dict = json.loads(response.content)
 
         return response_dict
@@ -65,7 +66,11 @@ def save_json(hf_api, save_dir, keyword):
     count = 0
     for model in model_list:
         modelId = model['modelId']
-        model_info = hf_api.get_model_info_by_id(modelId)
+        try:
+            model_info = hf_api.get_model_info_by_id(modelId)
+        except:
+            print(f'Error: {modelId}')
+            continue
 
         # add model info to dict
         model_detail_dict[modelId] = model_info
@@ -127,13 +132,12 @@ if __name__ == '__main__':
     hf_api = HuggingFaceAPI(api_key)
 
 
-    snowballing_from_data_to_model(hf_api)
-    exit()
+    # snowballing_from_data_to_model(hf_api)
     
-    
-    keyword = 'incoder'
+    keyword = 'code'
     
     save_json(hf_api, save_dir='data', keyword=keyword)
+    exit()
     save_csv(save_dir='data', keyword=keyword)
 
     exit()
