@@ -1,6 +1,7 @@
 import os 
 import csv
 import json
+from pydantic import BaseModel
 
 
 def get_prompt(prompt_type: str):
@@ -13,26 +14,24 @@ def get_prompt(prompt_type: str):
             '''
     elif prompt_type == 'zero-shot-CoT':
         prompt = '''
-        Given the documentation (written in Markdown) of a Hugging Face model, please help me decide whether this model is designed for software engineering related tasks (like code completion, code generation, defect prediction, clone detection, and others). Please explain the reason process of reaching the answer. You may want to analyze the model's training data, tasks, and evaluation dataset. Provide your final answer in either Yes or No. Your answer should be in the following template.
+        Given the documentation (written in Markdown) of a Hugging Face model, please help me decide whether this model is designed for software engineering related tasks (like code completion, code generation, defect prediction, clone detection, and others). Please explain the reason process of reaching the answer. You may want to analyze the model's training data, tasks, and evaluation dataset. You must provide your final answer in either Yes or No. You cannot say unsure. Your answer should be in the following template.
 
         Reason Steps:
 
         Final Answers: Yes or No
         
         '''
+    elif prompt_type == 'few-shot-CoT':
+        raise NotImplementedError
+        # 这里需要设计一个few-shot的模板
+    
+    
     else:
         raise ValueError(f"Unknown prompt type: {prompt_type}")
     
     return prompt
 
-    
-
-if __name__ == '__main__':
-    
-    path_to_labels = './data/manual-labeling.csv'
-    rdm_folder = 'readme-all'
-    prompt_type = 'zero-shot-prompt'
-    openai_model_type = 'gpt-4o-mini'
+def get_model_type(path_to_labels):
     model_to_type = {}
 
     # get the model and its type
@@ -52,6 +51,17 @@ if __name__ == '__main__':
                 continue
 
             model_to_type[model_name] = model_type
+            
+    return model_to_type
+
+if __name__ == '__main__':
+    
+    path_to_labels = './data/manual-labeling.csv'
+    rdm_folder = 'readme-all'
+    prompt_type = 'zero-shot-CoT'
+    openai_model_type = 'gpt-3.5-turbo'
+
+    model_to_type = get_model_type(path_to_labels)
     
     prompt = get_prompt(prompt_type)
     
