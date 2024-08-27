@@ -5,14 +5,15 @@ import time
 
 
 if __name__ == '__main__':
-    prompt_type = 'zero-shot-CoT'
+    prompt_type = 'few-shot-CoT'
     openai_model_type = 'gpt-4o'
     # path to query
-    path_to_qeury = './batches/{}-{}.jsonl'.format(prompt_type, openai_model_type)
+    task_type = "base-model"
+    path_to_qeury = './batches/{}/{}-{}.jsonl'.format(task_type, prompt_type, openai_model_type)
 
-    # remove the results ./batches/{}-{}-output.jsonl'.format(prompt_type, openai_model_type) if exists
-    if os.path.exists('./batches/{}-{}-output.jsonl'.format(prompt_type, openai_model_type)):
-        os.remove('./batches/{}-{}-output.jsonl'.format(prompt_type, openai_model_type))
+
+    if os.path.exists('./batches/{}/{}-{}-output.jsonl'.format(task_type, prompt_type, openai_model_type)):
+        os.remove('./batches/{}/{}-{}-output.jsonl'.format(task_type, prompt_type, openai_model_type))
         
     client = OpenAI()
     with open(path_to_qeury, 'r') as f:
@@ -38,7 +39,7 @@ if __name__ == '__main__':
                 'content': output
             }
             
-            with open('./batches/{}-{}-output.jsonl'.format(prompt_type, openai_model_type), 'a') as f:
+            with open('./batches/{}/{}-{}-output.jsonl'.format(task_type, prompt_type, openai_model_type), 'a') as f:
                 f.write(json.dumps(result) + '\n')
             
             

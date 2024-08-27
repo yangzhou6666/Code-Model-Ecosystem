@@ -22,8 +22,8 @@ def get_base_model(path_to_labels):
 if __name__ == '__main__':
     path_to_labels = './data/model_dependency.csv'
     rdm_folder = 'readme-all'
-    prompt_type = 'zero-shot-CoT'
-    openai_model_type = 'gpt-4o-mini'
+    prompt_type = 'few-shot-CoT'
+    openai_model_type = 'gpt-4o'
 
     model_to_base = get_base_model(path_to_labels)
 
@@ -41,16 +41,19 @@ if __name__ == '__main__':
                 ground_truth = model_to_base[model_name]
             except:
                 print(model_name)
+                results[model_name] = 'unknown'
+                model_to_base[model_name] = 'unknown'
                 continue
                 
             
-            if openai_model_type == 'gpt-4do':
+            if openai_model_type == 'gpt-4o':
                 llm_output = line['content'].lower()
             else:
                 llm_output = line['response']["body"]['choices'][0]['message']['content'].lower()
             
             llm_output = llm_output.split('parent model:')[1].strip()
-            print(llm_output)
+            # remove \n
+            llm_output = llm_output.replace('\n', ' ')
             results[model_name] = llm_output
             
             

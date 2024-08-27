@@ -60,7 +60,6 @@ def get_query(prompt_type: str, model_name: str, readme: str, openai_model_type:
         }
 
     elif prompt_type == 'few-shot-CoT':
-        pass
         # 这里query的结构要有所变化
         
         # example 1
