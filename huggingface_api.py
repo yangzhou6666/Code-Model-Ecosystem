@@ -16,12 +16,24 @@ class HuggingFaceAPI:
         self.interval = interval
 
     def get_model_list_by_keywords(self, keyword=None):
-        endpoint = "/api/models"
-        query_params = {"search": keyword if isinstance(keyword, str) else ""}
-        response = requests.get(self.base_url + endpoint, query_params)
-        response_dict = json.loads(response.content)
+        endpoint = "/api/models?search=code"
+        query_params = {
+            # "search": keyword if isinstance(keyword, str) else ""}
+        }
+        
+        all_models = []
+        next_url = self.base_url + endpoint
+        while next_url:
+            response = requests.get(next_url, params=query_params)
+            response_dict = json.loads(response.content)
+            all_models.extend(response_dict)  # Add current page data to the list
+            
+            # Check if there's a next page
+            next_url = response.links.get('next', {}).get('url', None)
+            time.sleep(0.5)
+            print(len(all_models))
 
-        return response_dict
+        return all_models
 
     def get_model_info_by_id(self, model_id):
         endpoint = f"/api/models/{model_id}"
@@ -53,12 +65,18 @@ class HuggingFaceAPI:
 
 def save_json(hf_api, save_dir, keyword):
     # dataset
-    dataset_list = hf_api.get_dataset_list()
+    dataset_list = hf_api.get_dataset_list(keyword=keyword)
     with open(f'{save_dir}/dataset_list.json', 'w') as f:
         json.dump(dataset_list, f, indent=4)
 
     # models with "code" keywords
     model_list = hf_api.get_model_list_by_keywords(keyword)
+    print(len(model_list))
+    # save the model list
+    with open(f'{save_dir}/model_list_{keyword}.json', 'w') as f:
+        json.dump(model_list, f, indent=4)
+        
+    exit()
 
 
     # detail information of each model
@@ -124,7 +142,7 @@ def snowballing_from_data_to_model(hf_api):
 
 if __name__ == '__main__':
 
-    save_dir = 'data'
+    save_dir = 'automated_data'
     with open('config.yaml') as f:
         config = yaml.load(f)
     # obtain API Key
@@ -136,7 +154,7 @@ if __name__ == '__main__':
     
     keyword = 'code'
     
-    save_json(hf_api, save_dir='data', keyword=keyword)
+    save_json(hf_api, save_dir, keyword=keyword)
     exit()
     save_csv(save_dir='data', keyword=keyword)
 
