@@ -16,7 +16,7 @@ class HuggingFaceAPI:
         self.interval = interval
 
     def get_model_list_by_keywords(self, keyword=None):
-        endpoint = "/api/models?search=code"
+        endpoint = f"/api/models?search={keyword}"
         query_params = {
             # "search": keyword if isinstance(keyword, str) else ""}
         }
@@ -75,8 +75,8 @@ def save_json(hf_api, save_dir, keyword):
     # save the model list
     with open(f'{save_dir}/model_list_{keyword}.json', 'w') as f:
         json.dump(model_list, f, indent=4)
-        
-    exit()
+    
+    return
 
 
     # detail information of each model
@@ -142,9 +142,9 @@ def snowballing_from_data_to_model(hf_api):
 
 if __name__ == '__main__':
 
-    save_dir = 'automated_data'
+    save_dir = 'major_revision'
     with open('config.yaml') as f:
-        config = yaml.load(f)
+        config = yaml.safe_load(f)
     # obtain API Key
     api_key = config['huggingface_key']
     hf_api = HuggingFaceAPI(api_key)
@@ -152,9 +152,13 @@ if __name__ == '__main__':
 
     # snowballing_from_data_to_model(hf_api)
     
-    keyword = 'code'
-    
-    save_json(hf_api, save_dir, keyword=keyword)
+    # 'python', 'java', 'py', 'rust', 'ruby', 'c++', 'c#', 'javascript',
+    keyword_list = ['php', 'swift']
+    for keyword in keyword_list:
+        print(keyword)
+        save_json(hf_api, save_dir, keyword=keyword)
+
+
     exit()
     save_csv(save_dir='data', keyword=keyword)
 
