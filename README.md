@@ -35,3 +35,8 @@ RQ2 is largely based on manual annotation of the model reuse type and we count t
 
 The jupyter notebook `RQ3.ipynb` contains the steps to replicate RQ3.
 
+
+## Automatically Build LLM4Code ecosystem
+
+The prompts and the scripts for calling OpenAI models in under `automation` folder.
+
